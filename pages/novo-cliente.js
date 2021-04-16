@@ -2,7 +2,6 @@ import React, { useState } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import Datetime from "react-datetime";
 // @material-ui/icons
 import PhoneIcon from '@material-ui/icons/Phone';
 import People from "@material-ui/icons/People";
@@ -41,6 +40,7 @@ export default function LoginPage(props) {
 
     async function cadastrarCliente(e) {
         e.preventDefault()
+
         var date = new Date(dataNasc)
         var day = date.getDate();
         if(day < 10) {
@@ -56,13 +56,14 @@ export default function LoginPage(props) {
             nome: nome[0].toUpperCase() + nome.substr(1), telefone, dataNascimento
         }        
         setloading(true)
+        
         await api.post('/clientes', data)
-        .then(response => {
+        .then(() => {
             alert("Cadastrado com sucesso")
-            console.log(response.data)
             window.location.reload()
         })
         .catch(err => {
+            console.log(err.response)
             alert(err.response.data.message)
             console.log(err.response)
         })

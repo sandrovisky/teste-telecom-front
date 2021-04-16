@@ -41,11 +41,13 @@ export default function LoginPage(props) {
             .then(res => {
                 return res.data
             })
+
             clientes.map(dados => (                
                 options.push(
                     <MenuItem key = {dados.id} value={dados.id}>{dados.nome}</MenuItem>
                 )
             ))
+            
             setMenuClientes(options)
 
             const produtos = await api.get('/produtos')
@@ -73,7 +75,7 @@ export default function LoginPage(props) {
 
     async function cadastrarPedido(e) {
         e.preventDefault()
-
+        setloading(true)
         if(!cliente) {
             return alert("Selecione um cliente.")
         }
@@ -92,10 +94,17 @@ export default function LoginPage(props) {
             valorTotal: total,
             produtos: arrayProd
         }
-        
+
         await api.post('/pedidos', dataPedido)
-        .then(res => {
-            console.log(res.data)
+        .then(() => {
+            alert("Cadastrado com sucesso.")
+            window.location.reload()
+        })
+        .catch(() =>
+            alert("Erro ao cadastrar") 
+        )
+        .finally(() => {
+            setloading(false)
         })
     }
 
