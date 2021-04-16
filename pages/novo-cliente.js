@@ -70,6 +70,18 @@ export default function LoginPage(props) {
         .finally(() => {
             setloading(false)
         })
+    }    
+
+    function handleChangeTelefone(e) {
+        if(telefone.length === 2) {
+            setTelefone("(" + telefone + ")")
+        } else if(telefone.length === 9) {
+            setTelefone(telefone + "-")
+        } else if(telefone.length > 13 ){
+            return
+        } else {
+            setTelefone(e.target.value)
+        }
     }
 
     return (
@@ -111,6 +123,7 @@ export default function LoginPage(props) {
                             type: "text",
                             value: nome,                        
                             required: true,
+                            maxLength: "2",
                             endAdornment: (
                             <InputAdornment position="end">
                                 <People className={classes.inputIconsColor} />
@@ -134,7 +147,7 @@ export default function LoginPage(props) {
                             <PhoneIcon />
                             </InputAdornment>
                             ),
-                            onChange: e => setTelefone(e.target.value)
+                            onChange: e => handleChangeTelefone(e)
                         }}
                         />
                         <label >Data de Nascimento</label>

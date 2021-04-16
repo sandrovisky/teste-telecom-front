@@ -59,6 +59,14 @@ export default function LoginPage(props) {
         })
     }
 
+    function handleChangeValor(e) {
+        if(e.target.value.replace(",","").length > 1) {
+            setValor(e.target.value.replace(",","").slice(0, -2) + ',' + e.target.value.replace(",","").slice(-2))
+        } else {
+            setValor(e.target.value)
+        }
+    }
+
     return (
         <div style = {{cursor: `${loading ? "progress": "auto"}`}}> 
         <Header
@@ -109,7 +117,7 @@ export default function LoginPage(props) {
                         }}
                         inputProps={{
                             type: "text",
-                            onChange: e => setValor(e.target.value),
+                            onChange: e => handleChangeValor(e),
                             value: valor,
                             required: true,
                             endAdornment: (

@@ -57,7 +57,7 @@ export default function LoginPage(props) {
             options = []
             produtos.map(dados => (                
                 options.push(
-                    <MenuItem key = {dados.id} value={{nome:dados.nome[0].toUpperCase() + dados.nome.substr(1), valor: dados.valor, id:dados.id}}>{dados.nome[0].toUpperCase() + dados.nome.substr(1) + "  " + dados.valor}</MenuItem>
+                    <MenuItem key = {dados.id} value={{nome:dados.nome[0].toUpperCase() + dados.nome.substr(1), valor: dados.valor, id:dados.id}}>{dados.nome[0].toUpperCase() + dados.nome.substr(1) + " -  R$ " + dados.valor}</MenuItem>
                 )                
             ))
             setloading(false)
