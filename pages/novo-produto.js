@@ -60,6 +60,9 @@ export default function LoginPage(props) {
     }
 
     function handleChangeValor(e) {
+        if(isNaN(e.target.value.replace(",", ""))) {
+            return alert("Insira apenas numeros.")
+        }
         if(e.target.value.replace(",","").length > 1) {
             setValor(e.target.value.replace(",","").slice(0, -2) + ',' + e.target.value.replace(",","").slice(-2))
         } else {
