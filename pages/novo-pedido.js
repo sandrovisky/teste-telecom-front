@@ -38,36 +38,36 @@ export default function LoginPage(props) {
             let options = []
 
             const clientes = await api.get('/clientes')
-            .then(res => {
-                return res.data
-            })
+                .then(res => {
+                    return res.data
+                })
 
-            clientes.map(dados => (                
+            clientes.map(dados => (
                 options.push(
-                    <MenuItem key = {dados.id} value={dados.id}>{dados.nome}</MenuItem>
+                    <MenuItem key={dados.id} value={dados.id}>{dados.nome}</MenuItem>
                 )
             ))
-            
+
             setMenuClientes(options)
 
             const produtos = await api.get('/produtos')
-            .then(res => {
-                return res.data
-            })
+                .then(res => {
+                    return res.data
+                })
             options = []
-            produtos.map(dados => (                
+            produtos.map(dados => (
                 options.push(
-                    <MenuItem key = {dados.id} value={{nome:dados.nome[0].toUpperCase() + dados.nome.substr(1), valor: dados.valor, id:dados.id}}>{dados.nome[0].toUpperCase() + dados.nome.substr(1) + " -  R$ " + dados.valor}</MenuItem>
-                )                
+                    <MenuItem key={dados.id} value={{ nome: dados.nome[0].toUpperCase() + dados.nome.substr(1), valor: dados.valor, id: dados.id }}>{dados.nome[0].toUpperCase() + dados.nome.substr(1) + " -  R$ " + dados.valor}</MenuItem>
+                )
             ))
             setloading(false)
             setMenuProdutos(options)
         }
         getData()
-    },[])
-    
+    }, [])
+
     const [cardAnimaton, setCardAnimation] = React.useState("cardHidden");
-    setTimeout(function() {
+    setTimeout(function () {
         setCardAnimation("");
     }, 700);
     const classes = useStyles();
@@ -76,11 +76,11 @@ export default function LoginPage(props) {
     async function cadastrarPedido(e) {
         e.preventDefault()
         setloading(true)
-        if(!cliente) {
+        if (!cliente) {
             return alert("Selecione um cliente.")
         }
 
-        if(!total) {
+        if (!total) {
             return alert("Adicione pelo menos um produto ao pedido.")
         }
 
@@ -96,128 +96,128 @@ export default function LoginPage(props) {
         }
 
         await api.post('/pedidos', dataPedido)
-        .then(() => {
-            alert("Cadastrado com sucesso.")
-            window.location.reload()
-        })
-        .catch(() =>
-            alert("Erro ao cadastrar") 
-        )
-        .finally(() => {
-            setloading(false)
-        })
+            .then(() => {
+                alert("Cadastrado com sucesso.")
+                window.location.reload()
+            })
+            .catch(() =>
+                alert("Erro ao cadastrar")
+            )
+            .finally(() => {
+                setloading(false)
+            })
     }
 
     function adicionarProduto() {
-        console.log(parseFloat(produto.valor.replace(",",".")))
+        console.log(parseFloat(produto.valor.replace(",", ".")))
         const lista = prodSelecionados
-        lista.push([produto.nome,produto.valor,produto.id])
-        if(produto) {                     
+        lista.push([produto.nome, produto.valor, produto.id])
+        if (produto) {
             setProdSelecionados([...lista]);
         } else {
             alert("Selecione um produto.")
-        }        
-        setTotal(total + parseFloat(produto.valor.replace(",",".")))
+        }
+        setTotal(total + parseFloat(produto.valor.replace(",", ".")))
     }
 
-    function deletarDaLista(e){
-        setTotal(total - parseFloat(prodSelecionados[e][1].replace(",","."))) 
+    function deletarDaLista(e) {
+        setTotal(total - parseFloat(prodSelecionados[e][1].replace(",", ".")))
         var antigoArray = prodSelecionados
         antigoArray.splice(e, 1)
-        setProdSelecionados([...antigoArray])           
+        setProdSelecionados([...antigoArray])
     }
 
     return (
         <>
-        <div style = {{cursor: `${loading ? "progress": "auto"}`}}>
-            
-        <Header
-            absolute
-            brandComponent = "oxe"
-            rightLinks={<HeaderLinks />}
-            {...rest}
-        />
-        <div
-            className={classes.pageHeader}
-            style={{
-            backgroundImage: "url(" + image + ")",
-            backgroundSize: "cover",
-            backgroundPosition: "top center"
-            }}
-        >
-            <div className={classes.container}>
-            <GridContainer justify="center">
-                <GridItem xs={12} sm={10} md={8} >
-                <Card className={classes[cardAnimaton]}>
-                    <form className={classes.form} onSubmit = {e => cadastrarPedido(e)} >
-                    <CardHeader color="primary" className={classes.cardHeader}>
-                        <h3>Novo Pedido</h3>
-                    </CardHeader>
-                    <CardBody>
+            <div style={{ cursor: `${loading ? "progress" : "auto"}` }}>
+
+                <Header
+                    absolute
+                    brandComponent="oxe"
+                    rightLinks={<HeaderLinks />}
+                    {...rest}
+                />
+                <div
+                    className={classes.pageHeader}
+                    style={{
+                        backgroundImage: "url(" + image + ")",
+                        backgroundSize: "cover",
+                        backgroundPosition: "top center"
+                    }}
+                >
+                    <div className={classes.container}>
                         <GridContainer justify="center">
-                        <GridItem >
-                            <InputLabel id="label">Selecione o Cliente</InputLabel>
-                            <Select
-                            style = {{width: "100%"}}
-                            labelId="demo-customized-select-label"
-                            id="demo-customized-select"
-                            onChange = {e => setCliente(e.target.value)}
-                            value = {cliente}
-                            >
-                            {menuClientes}
-                            </Select>
-                            <GridContainer justify="center">
-                                <GridItem xs={12} sm={8} md={10} >
-                                    <InputLabel style = {{marginTop: "1rem"}} id="label">Selecione o Produto</InputLabel>
-                                    <Select
-                                    inputProps = {{
-                                        required: true
-                                    }}                                    
-                                    onChange = {e => setProduto(e.target.value)}
-                                    value = {produto}
-                                    style = {{width: "100%"}}
-                                    labelId="demo-customized-select-label"
-                                    id="demo-customized-select" 
-                                    >
-                                        {menuProdutos}
-                                    </Select>
-                                </GridItem>
-                                    <GridItem xs={12} sm={4} md={2} >
-                                        <Button simple  color="primary" onClick = {() => adicionarProduto()} size = "sm" style = {{marginTop: "40px", marginLeft: "-20px"}} >
-                                            Adicionar
-                                        </Button>
-                                    </GridItem>
-                            </GridContainer>
-                            
-                        </GridItem>
-                    </GridContainer>
-                    <ol>
-                        {prodSelecionados.map((dados, index) => (
-                            
-                            <li key = {index} style = {{listStyle: "none"}}>{dados[0]} R${dados[1]} 
-                                {
-                                    <Button simple color="primary" size = "sm" onClick = {() => deletarDaLista(index)} style = {{width: "5px"}} >
-                                        <DeleteForeverIcon />
-                                    </Button>
-                                } 
-                            </li>
-                        ))}
-                    </ol>
-                    <h4 style = {{textAlign: "end"}} >Total: R$ {total.toFixed(2)}</h4>
-                    </CardBody>
-                    <CardFooter className={classes.cardFooter}>
-                        <Button simple color="primary" type = "submit" size="lg">
-                        Cadastrar
-                        </Button>
-                    </CardFooter>
-                    </form>
-                </Card>
-                </GridItem>
-            </GridContainer>
+                            <GridItem xs={12} sm={10} md={8} >
+                                <Card className={classes[cardAnimaton]}>
+                                    <form className={classes.form} onSubmit={e => cadastrarPedido(e)} >
+                                        <CardHeader color="primary" className={classes.cardHeader}>
+                                            <h3>Novo Pedido</h3>
+                                        </CardHeader>
+                                        <CardBody>
+                                            <GridContainer justify="center">
+                                                <GridItem >
+                                                    <InputLabel id="label">Selecione o Cliente</InputLabel>
+                                                    <Select
+                                                        style={{ width: "100%" }}
+                                                        labelId="demo-customized-select-label"
+                                                        id="demo-customized-select"
+                                                        onChange={e => setCliente(e.target.value)}
+                                                        value={cliente}
+                                                    >
+                                                        {menuClientes}
+                                                    </Select>
+                                                    <GridContainer justify="center">
+                                                        <GridItem xs={12} sm={8} md={10} >
+                                                            <InputLabel style={{ marginTop: "1rem" }} id="label">Selecione o Produto</InputLabel>
+                                                            <Select
+                                                                inputProps={{
+                                                                    required: true
+                                                                }}
+                                                                onChange={e => setProduto(e.target.value)}
+                                                                value={produto}
+                                                                style={{ width: "100%" }}
+                                                                labelId="demo-customized-select-label"
+                                                                id="demo-customized-select"
+                                                            >
+                                                                {menuProdutos}
+                                                            </Select>
+                                                        </GridItem>
+                                                        <GridItem xs={12} sm={4} md={2} >
+                                                            <Button simple color="primary" onClick={() => adicionarProduto()} size="sm" style={{ marginTop: "40px", marginLeft: "-20px" }} >
+                                                                Adicionar
+                                                            </Button>
+                                                        </GridItem>
+                                                    </GridContainer>
+
+                                                </GridItem>
+                                            </GridContainer>
+                                            <ol>
+                                                {prodSelecionados.map((dados, index) => (
+
+                                                    <li key={index} style={{ listStyle: "none" }}>{dados[0]} R${dados[1]}
+                                                        {
+                                                            <Button simple color="primary" size="sm" onClick={() => deletarDaLista(index)} style={{ width: "5px" }} >
+                                                                <DeleteForeverIcon />
+                                                            </Button>
+                                                        }
+                                                    </li>
+                                                ))}
+                                            </ol>
+                                            <h4 style={{ textAlign: "end" }} >Total: R$ {total.toFixed(2)}</h4>
+                                        </CardBody>
+                                        <CardFooter className={classes.cardFooter}>
+                                            <Button simple color="primary" type="submit" size="lg">
+                                                Cadastrar
+                                            </Button>
+                                        </CardFooter>
+                                    </form>
+                                </Card>
+                            </GridItem>
+                        </GridContainer>
+                    </div>
+                    <Footer whiteFont />
+                </div>
             </div>
-            <Footer whiteFont />
-        </div>
-        </div>
         </>
     );
 }
