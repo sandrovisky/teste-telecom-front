@@ -50,7 +50,9 @@
     "react": "16.13.1",
     "react-datetime": "2.16.3",
     "react-dom": "16.13.1",
+    "react-simple-star-rating": "^3.0.0",
     "react-slick": "0.25.2",
+    "react-star-ratings": "^2.3.0",
     "react-swipeable-views": "0.13.9",
     "styled-components": "5.1.0",
     "webpack": "4.43.0"
